@@ -6,5 +6,9 @@ COPY . .
 
 RUN pip install --upgrade pip
 
-CMD ["python", "--version"]
+EXPOSE 8080
+
+CMD ["python", "server.py"]
+
+
 
