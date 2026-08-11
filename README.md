@@ -15,7 +15,7 @@ GitHub Repository: https://github.com/kd0415b/codyssey_kd
 | Terminal | macOS Terminal |
 | Docker 실행 환경 | OrbStack |
 | Docker Version | Docker version 28.5.2, build ecc6942 |
-| Git Version | `git --version` 명령으로 확인 |
+| Git Version | git version 2.50.1 (Apple Git-155) |
 
 Docker 버전 확인:
 
@@ -33,6 +33,18 @@ Docker 데몬 정보 확인:
 
 ```bash
 docker info
+```
+
+Git 버전 확인:
+
+```bash
+git --version
+```
+
+실행 결과:
+
+```text
+git version 2.50.1 (Apple Git-155)
 ```
 
 주요 확인 결과:
@@ -352,13 +364,26 @@ Git에서 확인된 파일 모드 변경:
 mode change 100644 => 100755 server.py
 ```
 
-디렉토리 권한 확인 및 변경 방법:
+디렉토리 권한 확인 및 변경:
 
 ```bash
 mkdir permission_test
+chmod 700 permission_test
 ls -ld permission_test
 chmod 755 permission_test
 ls -ld permission_test
+```
+
+변경 전:
+
+```text
+drwx------@ 2 encks  wheel  64 Aug 11 22:37 permission_test
+```
+
+변경 후:
+
+```text
+drwxr-xr-x@ 2 encks  wheel  64 Aug 11 22:37 permission_test
 ```
 
 권한 의미:
@@ -518,6 +543,43 @@ git config --global user.email "사용자 이메일"
 git config --global init.defaultBranch main
 git config --list
 ```
+
+Git 버전 확인:
+
+```bash
+git --version
+```
+
+실행 결과:
+
+```text
+git version 2.50.1 (Apple Git-155)
+```
+
+Git 설정 확인:
+
+```bash
+git config --list
+```
+
+실행 결과:
+
+```text
+credential.helper=osxkeychain
+init.defaultbranch=main
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+remote.origin.url=https://github.com/kd0415b/codyssey_kd
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+```
+
+`git config --list` 출력에는 GitHub 토큰이나 비밀번호가 포함되지 않았다. 이메일이 출력되는 경우 README에는 `user.email=***@***.com` 형식으로 마스킹한다.
 
 GitHub 업로드 과정:
 
