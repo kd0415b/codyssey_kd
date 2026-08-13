@@ -94,6 +94,8 @@ Server:
 codyssey_kd/
 ├── Dockerfile
 ├── README.md
+├── docs/
+│   └── docker_evidence.txt
 ├── hello.py
 ├── server.py
 └── grep_test.txt
@@ -105,6 +107,7 @@ codyssey_kd/
 | server.py | Python HTTP 웹 서버 |
 | hello.py | Python 실행 테스트 파일 |
 | grep_test.txt | grep 실습용 텍스트 파일 |
+| docs/docker_evidence.txt | Docker 운영 명령과 볼륨 영속성 검증 전체 로그 |
 | README.md | 미션 수행 기록 문서 |
 
 ## 5. 터미널 기본 조작
@@ -455,25 +458,44 @@ Hello, bind mount!
 
 호스트에서 수정한 파일이 바인드 마운트를 통해 컨테이너 실행 결과에 반영되는 것을 확인했다.
 
-## 14. Docker 볼륨 영속성 검증 방법
+## 14. Docker 볼륨 영속성 검증
 
-Docker 볼륨은 컨테이너가 삭제되어도 데이터를 유지하기 위한 Docker 관리 저장공간이다. 검증은 같은 볼륨을 서로 다른 컨테이너에 연결해 파일이 유지되는지 확인하는 방식으로 진행한다.
+Docker 볼륨은 컨테이너가 삭제되어도 데이터를 유지하기 위한 Docker 관리 저장공간이다. 같은 볼륨을 서로 다른 컨테이너에 연결해 `/data/hello.txt` 파일이 유지되는지 확인했다.
 
 ```bash
-docker volume create mydata
-docker run -d --name vol-test -v mydata:/data ubuntu sleep infinity
-docker exec vol-test bash -lc "echo hi > /data/hello.txt && cat /data/hello.txt"
-docker rm -f vol-test
-docker run -d --name vol-test2 -v mydata:/data ubuntu sleep infinity
-docker exec vol-test2 bash -lc "cat /data/hello.txt"
+docker volume create codyssey-readme-vol
+docker run -d --name vol-test-readme -v codyssey-readme-vol:/data ubuntu sleep infinity
+docker exec vol-test-readme bash -lc "echo hi > /data/hello.txt && cat /data/hello.txt"
+docker rm -f vol-test-readme
+docker run -d --name vol-test-readme2 -v codyssey-readme-vol:/data ubuntu sleep infinity
+docker exec vol-test-readme2 bash -lc "cat /data/hello.txt"
 ```
 
-검증 기준:
+실제 핵심 출력:
 
 ```text
-새 컨테이너 vol-test2에서 /data/hello.txt 내용이 읽히면,
-볼륨 데이터가 컨테이너 삭제 후에도 유지된 것이다.
+$ docker volume create codyssey-readme-vol
+codyssey-readme-vol
+
+$ docker run -d --name vol-test-readme -v codyssey-readme-vol:/data ubuntu sleep infinity
+2b1d6a12aa84fa8267740bf69518820d164cd60c5fe9046c38fa90c47f0ebd02
+
+$ docker exec vol-test-readme bash -lc "echo hi > /data/hello.txt && cat /data/hello.txt"
+hi
+
+$ docker rm -f vol-test-readme
+vol-test-readme
+
+$ docker run -d --name vol-test-readme2 -v codyssey-readme-vol:/data ubuntu sleep infinity
+cda5dc2e4955032e4a97dbc5a21ce7fbf7547f0a7d888386243361cdf178ed3e
+
+$ docker exec vol-test-readme2 bash -lc "cat /data/hello.txt"
+hi
 ```
+
+첫 번째 컨테이너에서 `/data/hello.txt`를 만들고 `hi`를 확인한 뒤, 첫 번째 컨테이너를 삭제했다. 이후 두 번째 컨테이너에 같은 `codyssey-readme-vol` 볼륨을 연결했을 때 다시 `hi`가 출력되었으므로, 컨테이너 삭제 후에도 볼륨 데이터가 유지되는 것을 확인했다.
+
+전체 실행 로그는 [docs/docker_evidence.txt](docs/docker_evidence.txt)에 정리했다.
 
 ## 15. Docker 운영 명령
 
@@ -483,10 +505,24 @@ docker exec vol-test2 bash -lc "cat /data/hello.txt"
 docker images
 ```
 
+실제 출력:
+
+```text
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+codyssey     latest    6fd4772867b0   1 second ago   143MB
+```
+
 실행 중인 컨테이너 확인:
 
 ```bash
 docker ps
+```
+
+실제 출력:
+
+```text
+CONTAINER ID   IMAGE      COMMAND              STATUS                  PORTS                                         NAMES
+d4ef0f93e69d   codyssey   "python server.py"   Up Less than a second   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   codyssey-bind-readme
 ```
 
 전체 컨테이너 확인:
@@ -495,16 +531,49 @@ docker ps
 docker ps -a
 ```
 
+실제 출력:
+
+```text
+CONTAINER ID   IMAGE      COMMAND              CREATED                  STATUS                  PORTS                                         NAMES
+cda5dc2e4955   ubuntu     "sleep infinity"     Less than a second ago   Up Less than a second                                                 vol-test-readme2
+d4ef0f93e69d   codyssey   "python server.py"   10 seconds ago           Up 10 seconds           0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   codyssey-bind-readme
+```
+
+포트 매핑 접속 확인:
+
+```bash
+curl http://localhost:8080
+```
+
+실제 출력:
+
+```html
+<h1>Hello, Codyssey!</h1>
+```
+
 컨테이너 로그 확인:
 
 ```bash
-docker logs codyssey-bind
+docker logs codyssey-bind-readme
+```
+
+실제 출력:
+
+```text
+192.168.215.1 - - [13/Aug/2026 15:37:56] "GET / HTTP/1.1" 200 -
 ```
 
 컨테이너 리소스 사용량 확인:
 
 ```bash
-docker stats
+docker stats --no-stream codyssey-bind-readme
+```
+
+실제 출력:
+
+```text
+CONTAINER ID   NAME                   CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O   PIDS
+d4ef0f93e69d   codyssey-bind-readme   0.01%     10.39MiB / 15.67GiB   0.06%     1.17kB / 673B   0B / 0B     1
 ```
 
 각 명령의 목적:
@@ -515,7 +584,9 @@ docker stats
 | `docker ps` | 실행 중인 컨테이너 확인 |
 | `docker ps -a` | 종료된 컨테이너를 포함한 전체 목록 확인 |
 | `docker logs` | 컨테이너 표준 출력과 오류 로그 확인 |
-| `docker stats` | CPU, 메모리, 네트워크 사용량 확인 |
+| `docker stats --no-stream` | CPU, 메모리, 네트워크 사용량을 한 번만 출력 |
+
+README 본문에는 동료평가 때 바로 확인할 수 있는 핵심 출력만 발췌했고, 전체 출력은 [docs/docker_evidence.txt](docs/docker_evidence.txt)에 남겼다.
 
 ## 16. attach와 exec 차이
 
