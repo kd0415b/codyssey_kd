@@ -740,3 +740,30 @@ ls -l server.py
 | SSH 개인키 | README에 기록하지 않음 |
 | Git 설정 출력 | 이메일 등 개인정보가 포함될 수 있어 명령 중심으로 기록 |
 | 로그 공유 | 민감정보가 포함되지 않도록 필요한 결과만 발췌 |
+
+---
+
+## Docker 실제 검증 로그
+
+Docker 운영 명령과 볼륨 영속성 검증의 전체 실제 출력은 아래 파일에 정리했습니다.
+
+- [Docker 실제 검증 로그](docs/docker_evidence.txt)
+
+이 로그에는 다음 항목의 실제 실행 결과가 포함되어 있습니다.
+
+- `docker --version`
+- `docker info`
+- `docker build -t codyssey .`
+- `docker run -d -p 8080:8080`
+- `docker images`
+- `docker ps`
+- `docker ps -a`
+- `curl http://localhost:8080`
+- `docker logs`
+- `docker stats --no-stream`
+- Docker 볼륨 생성
+- 첫 번째 컨테이너에서 `/data/hello.txt` 생성 후 `hi` 확인
+- 첫 번째 컨테이너 삭제
+- 두 번째 컨테이너에 같은 볼륨 연결 후 다시 `hi` 확인
+
+이를 통해 컨테이너 실행, 포트 매핑, 운영 로그 확인, 리소스 확인, Docker 볼륨 영속성을 실제 출력으로 검증했습니다.
