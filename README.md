@@ -97,6 +97,13 @@ codyssey_kd/
 ├── docs/
 │   └── docker_evidence.txt
 ├── hello.py
+├── images/
+│   ├── 01-docker-hello-world.png
+│   ├── 02-readme-edit.jpeg
+│   ├── 03-localhost-hello-codyssey.png
+│   ├── 04-vscode-bind-mount-edit.png
+│   ├── 05-localhost-bind-mount.png
+│   └── 06-docker-ps-curl-restart.png
 ├── server.py
 └── grep_test.txt
 ```
@@ -108,6 +115,7 @@ codyssey_kd/
 | hello.py | Python 실행 테스트 파일 |
 | grep_test.txt | grep 실습용 텍스트 파일 |
 | docs/docker_evidence.txt | Docker 운영 명령과 볼륨 영속성 검증 전체 로그 |
+| images/ | 미션 수행 과정에서 확인한 스크린샷 증거 |
 | README.md | 미션 수행 기록 문서 |
 
 ## 5. 터미널 기본 조작
@@ -802,7 +810,35 @@ ls -l server.py
 -rwxr-xr-x  1 kd0415b8323  kd0415b8323  405  8  3 19:59 server.py
 ```
 
-## 20. 보안 점검
+## 20. 스크린샷 증거
+
+Docker와 웹 서버 실행 과정에서 확인한 주요 화면입니다.
+
+### Docker hello-world 실행
+
+![Docker hello-world 실행](images/01-docker-hello-world.png)
+
+### README 작성 화면
+
+![README 작성 화면](images/02-readme-edit.jpeg)
+
+### 포트 매핑 접속 확인
+
+![localhost 8080 접속 확인](images/03-localhost-hello-codyssey.png)
+
+### VSCode에서 바인드 마운트 파일 수정
+
+![VSCode bind mount edit](images/04-vscode-bind-mount-edit.png)
+
+### 바인드 마운트 반영 후 브라우저 확인
+
+![localhost bind mount](images/05-localhost-bind-mount.png)
+
+### docker ps / curl / restart 확인
+
+![docker ps curl restart](images/06-docker-ps-curl-restart.png)
+
+## 21. 보안 점검
 
 | 항목 | 확인 내용 |
 | --- | --- |
