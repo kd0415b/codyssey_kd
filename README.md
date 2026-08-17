@@ -743,33 +743,55 @@ STATUS: Up
 
 ---
 
-## 17. Git 설정 및 GitHub 연동
+## 17. Git 설정 및 GitHub / VS Code 연동
+
+Git 커밋에 사용할 사용자 정보와 기본 브랜치를 설정했다.
 
 ```bash
-git config --global user.name "사용자 이름"
-git config --global user.email "사용자 이메일"
+git config --global user.name "강두찬"
+git config --global user.email "kd0415b@gmail.com"
 git config --global init.defaultBranch main
 git config --list
 ```
 
-원격 저장소:
+확인된 주요 설정:
 
 ```text
-remote.origin.url=https://github.com/kd0415b/codyssey_kd
+user.name=강두찬
+user.email=kd0415b@gmail.com
+init.defaultbranch=main
+remote.origin.url=https://github.com/kd0415b/codyssey_kd.git
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
 ```
 
-업로드 과정:
+GitHub 업로드는 다음 흐름으로 진행했다.
 
 ```bash
 git status
-git add .
-git commit -m "Add Docker verification evidence and README improvements"
+git add README.md images/evidence backup
+git commit -m "Improve README and add verification evidence"
 git push origin main
 ```
 
-GitHub 토큰, 비밀번호, 인증 코드, 개인키는 README나 이미지에 기록하지 않는다.
+실제 push 결과에서 다음과 같이 `main -> main` 반영을 확인했다.
 
-> 최종 push 성공 화면은 이 README와 증거 이미지를 저장소에 반영한 뒤 추가한다.
+```text
+To https://github.com/kd0415b/codyssey_kd.git
+   c32064b..fa9e78f  main -> main
+```
+
+증거:
+
+![git config and push success](images/evidence/31-git-config-and-push-success.png)
+
+VS Code에서 `codyssey_kd` 저장소를 열고 **소스 제어(Source Control)** 화면에서 현재 `main` 브랜치와 기존 커밋 기록이 정상 표시되는 것도 확인했다.
+
+![VS Code Source Control](images/evidence/32-vscode-source-control.png)
+
+> **설명 포인트:** Git은 로컬 버전 관리 도구이고, GitHub는 원격 저장소다. VS Code의 Source Control은 현재 Git 저장소의 브랜치와 변경사항·커밋 기록을 GUI로 확인하고 Git 작업을 수행할 수 있게 해준다.
+
+GitHub 토큰, 비밀번호, 인증 코드, 개인키는 README나 이미지에 기록하지 않는다. 위 증거 이미지에는 인증값 자체가 표시되지 않는다.
 
 ---
 
