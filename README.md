@@ -19,9 +19,6 @@
 
 GitHub Repository: https://github.com/kd0415b/codyssey_kd
 
-> **동료평가 때 한 문장으로 설명:**  
-> “터미널로 개발 환경을 다루고, Docker로 같은 환경을 재현하고, GitHub에 실행 과정과 증거를 남기는 미션입니다.”
-
 ---
 
 ## 2. 실행 환경
